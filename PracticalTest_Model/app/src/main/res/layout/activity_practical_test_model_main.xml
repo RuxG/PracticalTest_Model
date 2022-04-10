@@ -29,6 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/press_me"
+                android:id="@+id/button_0"
                 android:layout_below="@+id/text_view_0"
                 android:layout_centerHorizontal="@+id/text_view_0">
 
@@ -54,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/press_me_too"
                 android:layout_below="@+id/text_view_1"
+                android:id="@+id/button_1"
                 android:layout_centerHorizontal="@+id/text_view_1">
 
             </Button>
