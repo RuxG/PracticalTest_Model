@@ -1,7 +1,9 @@
 package ro.pub.cs.systems.eim.practicaltest_model;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,8 +19,12 @@ public class PracticalTest01MainActivity extends AppCompatActivity {
     Button zeroButton;
     Button oneButton;
     Button navigate;
+    StartedServiceBroadcastReceiver startedServiceBroadcastReceiver;
+    IntentFilter startedServiceIntentFilter;
 
     final private static int SECONDARY_ACTIVITY_REQUEST_CODE = 2022;
+    final private static int PRESSED_NO_LIMIT = 5;
+    private static boolean startedService = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +41,15 @@ public class PracticalTest01MainActivity extends AppCompatActivity {
         zeroButton.setOnClickListener(listener);
         oneButton.setOnClickListener(listener);
         navigate.setOnClickListener(listener);
+
+        startedServiceBroadcastReceiver = new StartedServiceBroadcastReceiver();
+
+        // TODO: exercise 8b - crea te an instance of an IntentFilter
+        // with all available actions contained within the broadcast intents sent by the service
+        startedServiceIntentFilter = new IntentFilter();
+        startedServiceIntentFilter.addAction("MY_DATA_ACTION");
+        registerReceiver(startedServiceBroadcastReceiver, startedServiceIntentFilter);
+
     }
 
     @Override
@@ -75,19 +90,27 @@ public class PracticalTest01MainActivity extends AppCompatActivity {
     private class PressMeListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
+            int pressedNo = Integer.parseInt(zeroText.getText().toString());
+            pressedNo += Integer.parseInt(oneText.getText().toString());
+
+            if (pressedNo > PRESSED_NO_LIMIT && !startedService) {
+                startedService = true;
+                Intent intent = new Intent();
+                ComponentName componentName = new ComponentName(getApplicationContext(),
+                        PracticalTest01Service.class);
+                intent.setComponent(componentName);
+                getApplicationContext().startService(intent);
+            }
 
             if (v.getId() == R.id.button_0) {
-                int pressedNo = Integer.parseInt(zeroText.getText().toString());
+                pressedNo = Integer.parseInt(zeroText.getText().toString());
                 pressedNo++;
                 zeroText.setText(String.valueOf(pressedNo));
             } else if (v.getId() == R.id.button_1) {
-                int pressedNo = Integer.parseInt(oneText.getText().toString());
+                pressedNo = Integer.parseInt(oneText.getText().toString());
                 pressedNo++;
                 oneText.setText(String.valueOf(pressedNo));
             } else if (v.getId() == R.id.navigate) {
-                int pressedNo = Integer.parseInt(zeroText.getText().toString());
-                pressedNo += Integer.parseInt(oneText.getText().toString());
-
                 Intent intent = new Intent(getApplicationContext(), PracticalTest_ModelSecondaryActivity.class);
                 intent.putExtra("TOTAL_PRESSED", String.valueOf(pressedNo));
                 startActivityForResult(intent, SECONDARY_ACTIVITY_REQUEST_CODE);
@@ -95,5 +118,13 @@ public class PracticalTest01MainActivity extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Intent intent = new Intent();
+        ComponentName componentName = new ComponentName(getApplicationContext(),
+                PracticalTest01Service.class);
+        intent.setComponent(componentName);
+        getApplicationContext().stopService(intent);
+    }
 }
