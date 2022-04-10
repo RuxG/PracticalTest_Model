@@ -24,9 +24,30 @@ public class PracticalTest01MainActivity extends AppCompatActivity {
         zeroButton = (Button)findViewById(R.id.button_0);
         oneButton = (Button)findViewById(R.id.button_1);
 
+
         PressMeListener listener = new PressMeListener();
         zeroButton.setOnClickListener(listener);
         oneButton.setOnClickListener(listener);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        String value = savedInstanceState.getString("ZeroText");
+        if (value != null) {
+            zeroText.setText(value);
+        }
+        value = savedInstanceState.getString("OneText");
+        if (value != null) {
+            oneText.setText(value);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putString("ZeroText", zeroText.getText().toString());
+        savedInstanceState.putString("OneText", oneText.getText().toString());
     }
 
     private class PressMeListener implements View.OnClickListener {

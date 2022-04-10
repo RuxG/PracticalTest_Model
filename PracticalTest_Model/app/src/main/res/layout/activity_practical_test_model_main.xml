@@ -23,6 +23,7 @@
                 android:text="@string/_0"
                 android:id="@+id/text_view_0"
                 android:enabled="false"
+                android:saveEnabled="false"
                 android:gravity="center_horizontal">
             </EditText>
             <Button
@@ -45,8 +46,9 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/_1"
+                android:text="@string/_0"
                 android:id="@+id/text_view_1"
+                android:saveEnabled="false"
                 android:enabled="false"
                 android:gravity="center_horizontal">
             </EditText>
